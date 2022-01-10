@@ -1,8 +1,7 @@
 package com.bbtech.dscatalog.services;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bbtech.dscatalog.dto.CategoryDTO;
 import com.bbtech.dscatalog.entities.Category;
 import com.bbtech.dscatalog.repositories.CategoryRepository;
+import com.bbtech.dscatalog.services.exceptions.EntityNotFoundException;
 
 @Service
 public class CategoryService {
@@ -39,6 +39,14 @@ public class CategoryService {
 		
 		return listDto;
 		*/
+	}
+	
+	//O Optional cria um objeto que não seja nulo.
+	@Transactional(readOnly = true)
+	public CategoryDTO findByid(Long id) {
+		Optional<Category> obj = repository.findById(id);
+		Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Entity not Found!")); 
+		return new CategoryDTO(entity);
 	}
 
 }
